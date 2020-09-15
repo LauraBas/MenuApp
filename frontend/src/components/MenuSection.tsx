@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEvent } from 'react';
 import { Items } from './Items';
+import { menuItem } from "./Menu"
 
 
-export class MenuSection extends Component<{title: string}, {}> {
+export class MenuSection extends Component<{title: string; items: menuItem[]; handleChange:() => void}, {}> {
 
     render() {
         return <div> 
@@ -15,14 +16,12 @@ export class MenuSection extends Component<{title: string}, {}> {
                                 <th scope="col">Order</th>
                             </tr>                            
                         </thead>
-                        <tbody>                       
-                                <Items name={"test"} price={10.25}/>                                                            
-                                <Items name={"test"} price={10.25}/>                                                                                                               
-                                <Items name={"test"} price={10.25}/>                                                                                                                                                                                                      
+                        <tbody>     
+                                {this.props.items.map(menuItem => 
+                                <Items name={menuItem.name} price={menuItem.price} handleChange={this.props.handleChange}/>)}                  
+                                
                         </tbody>
-                    </table>                             
-                      
-                                                                                                                             
+                    </table>                                                                                                                                                                                
                 </div>
     }
 }
