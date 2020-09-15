@@ -1,15 +1,12 @@
 import React from 'react';
-import logo from './logo.png';
 import './App.css';
+import Menu from './components/Menu';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Welcome! And good luck! :)<br/>Edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <Menu />
       </header>
     </div>
   );
