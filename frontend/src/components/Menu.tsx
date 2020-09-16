@@ -17,6 +17,8 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
         super(props)
         this.handleChange = this.handleChange.bind(this); 
         this.handleInput = this.handleInput.bind(this);
+        this.alert = this.alert.bind(this);
+        
         this.state = {
             items: [
                 {type:"main", name:"Avo on toast", price:5.50, selected:false, quantity:1},
@@ -29,6 +31,15 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
             ]
         }
     }
+    
+    alert(e :React.MouseEvent){
+        
+        alert("Your order is cooking :) !")   
+        setTimeout(function(){ alert("Your order is ready!!"); }, 2000) 
+    }
+    
+
+   
 
     handleChange(name: string) {
         const newItems = this.state.items.map(item => {
@@ -92,7 +103,7 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
                         </div>    
                     <p>Total Price: {this.calculateTotal()}</p>  
                     </div>                                                    
-                    <button type="submit">Done!</button>                                        
+                    <button  onClick={this.alert} type="submit">Done!</button>                                        
                 </div>
     }
 }
