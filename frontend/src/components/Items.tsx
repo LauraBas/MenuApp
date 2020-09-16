@@ -1,18 +1,18 @@
 import React, { Component, ChangeEvent } from 'react';
 
 
-export class Items extends Component<{name: string; price: number; selected: boolean;quantity: number; handleInput:(quantity: number, name: string) => void; handleChange:(name: string) => void}, {}> {
+export class Items extends Component<{name: string; price: number; selected: boolean;quantity: number; changeQuantity:(quantity: number, name: string) => void; selectedItem:(name: string) => void}, {}> {
     constructor(props: any) {
         super(props)
         this.onClick = this.onClick.bind(this); 
         this.onChange = this.onChange.bind(this);  
     }
     onClick(e :React.MouseEvent) {
-        this.props.handleChange(this.props.name);   
+        this.props.selectedItem(this.props.name);   
     }
     onChange(e: ChangeEvent<HTMLInputElement>) {
         let quantity = parseInt(e.target.value)
-        this.props.handleInput(quantity, this.props.name);       
+        this.props.changeQuantity(quantity, this.props.name);       
 
     }
 

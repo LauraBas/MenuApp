@@ -15,9 +15,9 @@ export interface menuItem {
 export class Menu extends Component<{}, { items: menuItem[]}> {
     constructor(props :{}) {
         super(props)
-        this.handleChange = this.handleChange.bind(this); 
-        this.handleInput = this.handleInput.bind(this);
-        this.alert = this.alert.bind(this);
+        this.selectedItem = this.selectedItem.bind(this); 
+        this.changeQuantity = this.changeQuantity.bind(this);
+        this.orderMessage = this.orderMessage.bind(this);
         
         this.state = {
             items: [
@@ -32,16 +32,15 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
         }
     }
     
-    alert(e :React.MouseEvent){
-        
-        alert("Your order is cooking :) !")   
+    orderMessage(e :React.MouseEvent){             
         setTimeout(function(){ alert("Your order is ready!!"); }, 2000) 
+        alert("Your order is cooking :) !")   
     }
     
 
    
 
-    handleChange(name: string) {
+    selectedItem(name: string) {
         const newItems = this.state.items.map(item => {
             if(item.name !== name){
                 return item
@@ -62,7 +61,7 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
         })
       }    
 
-      handleInput(quantity: number, name: string) {
+    changeQuantity(quantity: number, name: string) {
           console.log(name, quantity)
           const newItems = this.state.items.map(item =>{
               if(item.name !== name){
@@ -97,13 +96,13 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
                     <h1>Menu</h1> 
                     <div className="menu">                   
                         <div className="container">
-                            <MenuSection title={"Mains"} handleInput={this.handleInput} handleChange={this.handleChange} items={this.state.items.filter(i => i.type == "main")} />
-                            <MenuSection title={"Drinks"} handleInput={this.handleInput} handleChange={this.handleChange} items={this.state.items.filter(i => i.type == "drink")}/>                       
-                            <MenuSection title={"Desserts"} handleInput={this.handleInput} handleChange={this.handleChange} items={this.state.items.filter(i => i.type == "dessert")}/>                                     
+                            <MenuSection title={"Mains"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "main")} />
+                            <MenuSection title={"Drinks"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "drink")}/>                       
+                            <MenuSection title={"Desserts"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "dessert")}/>                                     
                         </div>    
                     <p>Total Price: {this.calculateTotal()}</p>  
                     </div>                                                    
-                    <button  onClick={this.alert} type="submit">Done!</button>                                        
+                    <button  onClick={this.orderMessage} type="submit">Done!</button>                                        
                 </div>
     }
 }
