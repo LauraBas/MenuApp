@@ -25,6 +25,10 @@
   color: #222;
   line-height: calc((10px + 2vmin) * 2);
 }
+.container{
+  display: inline-block;
+  
+}
 
 
 @keyframes App-logo-fade {
