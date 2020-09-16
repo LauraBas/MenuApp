@@ -29,6 +29,9 @@
   display: inline-block;
   
 }
+.quantity{
+  width: 50px;
+}
 
 
 @keyframes App-logo-fade {

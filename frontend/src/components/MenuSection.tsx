@@ -1,9 +1,9 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import { Items } from './Items';
 import { menuItem } from "./Menu"
 
 
-export class MenuSection extends Component<{title: string; items: menuItem[]; handleChange:(name: string) => void}, {}> {
+export class MenuSection extends Component<{title: string; items: menuItem[]; handleInput:(quantity: number, name: string) => void; handleChange:(name: string) => void}, {}> {
 
     render() {
         console.log(this.props)
@@ -15,6 +15,7 @@ export class MenuSection extends Component<{title: string; items: menuItem[]; ha
                                 <th scope="col">Name</th>
                                 <th scope="col">Price</th>
                                 <th scope="col">Order</th>
+                                
                             </tr>                            
                         </thead>
                         <tbody>     
@@ -24,7 +25,9 @@ export class MenuSection extends Component<{title: string; items: menuItem[]; ha
                                     name={menuItem.name} 
                                     price={menuItem.price} 
                                     selected={menuItem.selected}
-                                    handleChange={this.props.handleChange}
+                                    quantity={menuItem.quantity}
+                                    handleChange={this.props.handleChange}                                
+                                    handleInput={this.props.handleInput}
                                 />)}                  
                                 
                         </tbody>
