@@ -101,10 +101,10 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
     calculateTotal() {        
         const checked = this.state.items.filter(i=> i.selected)
         const firstOfferApplied = calculateHungryDateOffer(checked)    
-        // calculateHotOffer()
-        let total = firstOfferApplied.total
-        for (let i = 0; i < firstOfferApplied.remainingItems.length; i++){
-                total += firstOfferApplied.remainingItems[i].price * firstOfferApplied.remainingItems[i].quantity;             
+        const secondOfferApplied = calculateHotOffer(firstOfferApplied.remainingItems)
+        let total =  firstOfferApplied.total + secondOfferApplied.total 
+        for (let i = 0; i < secondOfferApplied.remainingItems.length; i++){
+                total += secondOfferApplied.remainingItems[i].price * secondOfferApplied.remainingItems[i].quantity;             
         }       
         return total;
     }
