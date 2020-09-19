@@ -22,7 +22,7 @@ export class Items extends Component<{name: string; price: number; selected: boo
         if (isSelected){
             quantity =           
             <td scope="row">
-            <input className="quantity" onChange={this.onChange}  type="number" min="1" value={this.props.quantity}/> 
+            <input className="quantity" onChange={this.onChange}  type="number" min="1" placeholder="1"value={this.props.quantity}/>
             </td>                        
         }
         return <tr>
