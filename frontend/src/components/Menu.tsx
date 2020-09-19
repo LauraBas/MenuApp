@@ -16,14 +16,17 @@ export interface menuItem {
 
 
 
-export class Menu extends Component<{}, { items: menuItem[]}> {
+export class Menu extends Component<{}, { items: menuItem[], orderPending: boolean}> {
     constructor(props :{}) {
         super(props)
         this.selectedItem = this.selectedItem.bind(this); 
         this.changeQuantity = this.changeQuantity.bind(this);
         this.order = this.order.bind(this);
 
-        this.state = { items:[]}
+        this.state = { 
+            items:[],
+            orderPending: false,
+        }
 
       }
        
@@ -40,6 +43,9 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
     }
     
     order(e :React.MouseEvent){  
+        this.setState({
+            orderPending: true
+        })
         fetch(`http://localhost:4848/`, {
             method: "POST", 
             mode: 'cors',
@@ -51,8 +57,10 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
         .then(res => res.text())
         .then(() => {
             alert("Your order is ready!!")
-        })    
-        
+            this.setState({
+                orderPending: false
+            })
+        })           
     }
 
     selectedItem(name: string) {
@@ -110,6 +118,7 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
     }
 
     render() {
+        const noItemsChecked = this.state.items.filter(item => item.selected).length == 0 
         return <div>                   
                     <h1>Menu</h1> 
                     <div className="menu">                   
@@ -119,8 +128,11 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
                             <MenuSection title={"Desserts"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "dessert")}/>                                     
                         </div>    
                     <p>Total Price: £{this.calculateTotal().toFixed(2)}</p>  
-                    </div>                                                    
-                    <button  onClick={this.order} type="submit">Done!</button>                                        
+                    </div>  
+                    {!this.state.orderPending 
+                        ? <button onClick={this.order} type="submit" disabled={noItemsChecked}>Done!</button>
+                        : <h2>Your order is on its way!</h2>
+                    }                                                  
                 </div>
     }
 }
