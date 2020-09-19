@@ -118,7 +118,7 @@ export class Menu extends Component<{}, { items: menuItem[]}> {
                             <MenuSection title={"Drinks"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "drink")}/>                       
                             <MenuSection title={"Desserts"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "dessert")}/>                                     
                         </div>    
-                    <p>Total Price: {this.calculateTotal()}</p>  
+                    <p>Total Price: £{this.calculateTotal().toFixed(2)}</p>  
                     </div>                                                    
                     <button  onClick={this.order} type="submit">Done!</button>                                        
                 </div>

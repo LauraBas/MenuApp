@@ -27,7 +27,7 @@ export class Items extends Component<{name: string; price: number; selected: boo
         }
         return <tr>
                     <td scope="row"><p>{this.props.name}</p></td>
-                    <td scope="row"><p>{this.props.price}</p> </td>                               
+                    <td scope="row"><p>£{this.props.price.toFixed(2)}</p> </td>                               
                     <td scope="row">
                         <input checked={this.props.selected} type="checkbox" onClick={this.onClick} /> 
                     </td>                   
