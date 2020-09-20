@@ -1,9 +1,12 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import { MenuSection } from './MenuSection';
 import calculateHotOffer from '../calculateHotOffer';
 import calculateHungryDateOffer from '../calculateHungryDateOffer';
-import {Button, Accordion, AccordionSummary, AccordionDetails, Typography, ListItem} from '@material-ui/core';
+import {Button,  ListItem, Dialog, DialogTitle, CircularProgress} from '@material-ui/core';
 import Offers from './Offers';
+import CheckIcon from '@material-ui/icons/Check';
+
+
 
 export interface menuItem {
     type: string
@@ -14,7 +17,7 @@ export interface menuItem {
     id: number
 }
 
-export class Menu extends Component<{}, { items: menuItem[], orderPending: boolean}> {
+export class Menu extends Component<{}, { items: menuItem[], orderPending: boolean, orderDelivered: boolean}> {
     constructor(props :{}) {
         super(props)
         this.selectedItem = this.selectedItem.bind(this); 
@@ -25,6 +28,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         this.state = { 
             items:[],
             orderPending: false,
+            orderDelivered: false
         }
 
     }
@@ -58,9 +62,9 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         })    
         .then(res => res.text())
         .then(() => {
-            alert("Your order is ready!!")
             this.setState({
-                orderPending: false
+                orderPending: false,
+                orderDelivered: true
             })
         })           
     }
@@ -131,6 +135,8 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         return total;
     }
 
+  
+      
     render() {
         const noItemsChecked = this.state.items.filter(item => item.selected).length == 0 
         
@@ -138,7 +144,8 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                     <h1>Menu</h1> 
                     <div className="menu"> 
 
-                        <div className="container">
+                        <div className="container"> 
+                                                                                                      
                             <Offers />
                             <MenuSection title={"Mains"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "main")} />
                             <MenuSection title={"Drinks"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "drink")}/>                       
@@ -152,8 +159,17 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                     </div>  
                     {!this.state.orderPending 
                         ? <Button variant="contained"color="secondary"onClick={this.order} type="submit" disabled={noItemsChecked}>Place your order!</Button>
-                        : <h2>Your order is on its way!</h2>
-                    }                                                  
+                        : <CircularProgress color="secondary"/>
+                    }    
+                    <Dialog
+                        open={this.state.orderDelivered}
+                        onClose={() => {this.setState({orderDelivered: false})}}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">Your order is ready!</DialogTitle>
+                    </Dialog>  
+                                                
                 </div>
     }
 }
