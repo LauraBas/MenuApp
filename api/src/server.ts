@@ -1,6 +1,5 @@
 import express from "express";
 
-
 interface Item {
   id :string
 }
@@ -8,7 +7,6 @@ interface Item {
 const port = process.env.NODE_PORT || 4848;
 
 export function run () {
-  
   const app = express();   
 
   app.use(express.json()) 
@@ -34,28 +32,29 @@ export function run () {
   });
 
   app.post("/", function(req, res){
-    
-
     connection.query("INSERT INTO purchase (pending) VALUES (TRUE)", (err :Error, results :any, fields :any) => {
       if (err) console.log(err);
-
-      const values  = req.body.map((item :Item) => { return [item.id, results.insertId]})      
+      const purchaseID = results.insertId
+      const values  = req.body.map((item :Item) => { return [item.id, purchaseID]})      
 
       connection.query("INSERT INTO menuPurchaseLink (menuID, purchaseID) VALUES ?", [values] , (err :Error, results :any, fields :any) => {
         if (err) throw err     
+
         setTimeout(function(){ 
-          res.send()
-        }, 3000) 
-      })
+          connection.query("UPDATE purchase SET pending = FALSE, delivered = TRUE WHERE id = " + purchaseID, (err :Error, results :any, fields :any) => {
+            if (err) console.log(err);
+
+            res.send()
+          });
+        }, 5000)         
+      })      
     })
   });
   
   return app.listen(port, function () {
     console.log(`Listening on http://localhost:${port}`);
   })
-
 }
-
 
 if(process.env.NODE_ENV !== 'testing') {
   run();

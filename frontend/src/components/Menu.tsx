@@ -2,6 +2,7 @@ import React, { Component, MouseEvent } from 'react';
 import { MenuSection } from './MenuSection';
 import calculateHotOffer from '../calculateHotOffer';
 import calculateHungryDateOffer from '../calculateHungryDateOffer';
+import Items from './Items';
 
 
 
@@ -44,7 +45,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
     
     order(e :React.MouseEvent){  
         this.setState({
-            orderPending: true
+            orderPending: true           
         })
         fetch(`http://localhost:4848/`, {
             method: "POST", 
@@ -119,6 +120,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
 
     render() {
         const noItemsChecked = this.state.items.filter(item => item.selected).length == 0 
+        
         return <div>                   
                     <h1>Menu</h1> 
                     <div className="menu">                   
@@ -126,7 +128,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                             <MenuSection title={"Mains"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "main")} />
                             <MenuSection title={"Drinks"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "drink")}/>                       
                             <MenuSection title={"Desserts"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "dessert")}/>                                     
-                        </div>    
+                        </div>                  
                     <p>Total Price: £{this.calculateTotal().toFixed(2)}</p>  
                     </div>  
                     {!this.state.orderPending 
