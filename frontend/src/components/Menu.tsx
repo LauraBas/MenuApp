@@ -2,7 +2,7 @@ import React, { Component, MouseEvent } from 'react';
 import { MenuSection } from './MenuSection';
 import calculateHotOffer from '../calculateHotOffer';
 import calculateHungryDateOffer from '../calculateHungryDateOffer';
-import {Button, Accordion, AccordionSummary, AccordionDetails, Typography} from '@material-ui/core';
+import {Button, Accordion, AccordionSummary, AccordionDetails, Typography, ListItem} from '@material-ui/core';
 import Offers from './Offers';
 
 export interface menuItem {
@@ -143,8 +143,12 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                             <MenuSection title={"Mains"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "main")} />
                             <MenuSection title={"Drinks"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "drink")}/>                       
                             <MenuSection title={"Desserts"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "dessert")}/>                                     
-                        </div>                  
-                    <p>Total Price: £{this.calculateTotal().toFixed(2)}</p>  
+                        </div>  
+                        
+                        {this.state.items.filter(item => item.selected).map(i => 
+                            <ListItem className="orderItems">{i.name}  {i.quantity} </ListItem>)}                
+                        
+                        <p>Total Price: £{this.calculateTotal().toFixed(2)}</p>  
                     </div>  
                     {!this.state.orderPending 
                         ? <Button variant="contained"color="secondary"onClick={this.order} type="submit" disabled={noItemsChecked}>Place your order!</Button>

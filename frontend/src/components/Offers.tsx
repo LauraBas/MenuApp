@@ -13,7 +13,7 @@ const Offers = function(){
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                        <Typography >Hot offer!</Typography>
+                        <Typography>Hot offer!</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                         <Typography>
@@ -27,7 +27,7 @@ const Offers = function(){
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                        <Typography >Hungry Date Offer!</Typography>
+                        <Typography>Hungry Date Offer!</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                         <Typography>

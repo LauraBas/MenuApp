@@ -30,7 +30,10 @@
   
 }
 .quantity{
-  width: 50px;
+  width: 40px;
+}
+.orderItems{
+ font-size: 20px; 
 }
 
 
