@@ -1,24 +1,25 @@
 import React, { Component } from 'react';
 import { Items } from './Items';
 import { menuItem } from "./Menu"
-
+import { TableContainer, Table, Paper, TableBody, TableHead, TableRow, TableCell } from '@material-ui/core';
 
 export class MenuSection extends Component<{title: string; items: menuItem[];changeQuantity:(quantity: number, name: string) => void; selectedItem:(name: string) => void}, {}> {
 
     render() {
-        console.log(this.props)
+        
         return <div> 
             <h3>{this.props.title}</h3>
-            <table className="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Order</th>
+            <TableContainer component={Paper}>
+                <Table aria-label="simple table">   
+                        <TableHead>
+                            <TableRow>
+                                <TableCell scope="col">Name</TableCell>
+                                <TableCell scope="col">Price</TableCell>
+                                <TableCell scope="col">Order</TableCell>
                                 
-                            </tr>                            
-                        </thead>
-                        <tbody>     
+                            </TableRow>                            
+                            </TableHead>
+                        <TableBody>     
                                 {this.props.items.map((menuItem, i) => 
                                 <Items 
                                     key={i}
@@ -30,9 +31,10 @@ export class MenuSection extends Component<{title: string; items: menuItem[];cha
                                     changeQuantity={this.props.changeQuantity}
                                 />)}                  
                                 
-                        </tbody>
-                    </table>                                                                                                                                                                                
-                </div>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
     }
 }
 

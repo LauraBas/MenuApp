@@ -2,9 +2,8 @@ import React, { Component, MouseEvent } from 'react';
 import { MenuSection } from './MenuSection';
 import calculateHotOffer from '../calculateHotOffer';
 import calculateHungryDateOffer from '../calculateHungryDateOffer';
-import Items from './Items';
-
-
+import {Button, Accordion, AccordionSummary, AccordionDetails, Typography} from '@material-ui/core';
+import Offers from './Offers';
 
 export interface menuItem {
     type: string
@@ -15,13 +14,12 @@ export interface menuItem {
     id: number
 }
 
-
-
 export class Menu extends Component<{}, { items: menuItem[], orderPending: boolean}> {
     constructor(props :{}) {
         super(props)
         this.selectedItem = this.selectedItem.bind(this); 
         this.changeQuantity = this.changeQuantity.bind(this);
+        this.enumerateItems = this.enumerateItems.bind(this);
         this.order = this.order.bind(this);
 
         this.state = { 
@@ -29,18 +27,21 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
             orderPending: false,
         }
 
-      }
+    }
        
-
     componentWillMount() {
-        fetch(`http://localhost:4848/`)
-        .then(res => res.json())
-        .then(menuItem => {               
-            this.setState({
-                items: menuItem,
-            })
-           
-        });
+        const cache = localStorage.getItem('items')
+        if (cache) {
+            this.setState({items: JSON.parse(cache)})
+        } else {
+            fetch(`http://localhost:4848/`)
+            .then(res => res.json())
+            .then(menuItem => {               
+                this.setState({
+                    items: menuItem,
+                })
+            });
+        }
     }
     
     order(e :React.MouseEvent){  
@@ -84,6 +85,8 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         this.setState({
             items: newItems
         })
+
+        localStorage.setItem('items', JSON.stringify(newItems))
       }    
 
     changeQuantity(quantity: number, name: string) {
@@ -103,17 +106,27 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
             }
         })
         this.setState({
-        items: newItems
-     })         
+            items: newItems
+        })   
+        localStorage.setItem('items', JSON.stringify(newItems))      
+    }
+
+    enumerateItems(item: menuItem){
+        const arr = []
+        for(let i = 0; i < item.quantity; i++) {
+            arr.push(item)
+        }
+        return arr
     }
 
     calculateTotal() {        
         const checked = this.state.items.filter(i=> i.selected)
-        const firstOfferApplied = calculateHungryDateOffer(checked)    
+        const enumeratedItems = checked.flatMap(this.enumerateItems)
+        const firstOfferApplied = calculateHungryDateOffer(enumeratedItems)    
         const secondOfferApplied = calculateHotOffer(firstOfferApplied.remainingItems)
         let total =  firstOfferApplied.total + secondOfferApplied.total 
         for (let i = 0; i < secondOfferApplied.remainingItems.length; i++){
-                total += secondOfferApplied.remainingItems[i].price * secondOfferApplied.remainingItems[i].quantity;             
+                total += secondOfferApplied.remainingItems[i].price;             
         }       
         return total;
     }
@@ -123,8 +136,10 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         
         return <div>                   
                     <h1>Menu</h1> 
-                    <div className="menu">                   
+                    <div className="menu"> 
+
                         <div className="container">
+                            <Offers />
                             <MenuSection title={"Mains"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "main")} />
                             <MenuSection title={"Drinks"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "drink")}/>                       
                             <MenuSection title={"Desserts"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "dessert")}/>                                     
@@ -132,7 +147,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                     <p>Total Price: £{this.calculateTotal().toFixed(2)}</p>  
                     </div>  
                     {!this.state.orderPending 
-                        ? <button onClick={this.order} type="submit" disabled={noItemsChecked}>Done!</button>
+                        ? <Button variant="contained"color="secondary"onClick={this.order} type="submit" disabled={noItemsChecked}>Place your order!</Button>
                         : <h2>Your order is on its way!</h2>
                     }                                                  
                 </div>
@@ -140,3 +155,4 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
 }
 
 export default Menu;
+

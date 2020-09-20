@@ -1,4 +1,5 @@
 import React, { Component, ChangeEvent } from 'react';
+import { TableRow, TableCell, Checkbox } from '@material-ui/core';
 
 
 export class Items extends Component<{name: string; price: number; selected: boolean;quantity: number; changeQuantity:(quantity: number, name: string) => void; selectedItem:(name: string) => void}, {}> {
@@ -21,20 +22,18 @@ export class Items extends Component<{name: string; price: number; selected: boo
         let quantity;
         if (isSelected){
             quantity =           
-            <td scope="row">
+            <TableCell scope="row">
             <input className="quantity" onChange={this.onChange}  type="number" min="1" placeholder="1"value={this.props.quantity}/>
-            </td>                        
+            </TableCell>                        
         }
-        return <tr>
-                    <td scope="row"><p>{this.props.name}</p></td>
-                    <td scope="row"><p>£{this.props.price.toFixed(2)}</p> </td>                               
-                    <td scope="row">
-                        <input checked={this.props.selected} type="checkbox" onClick={this.onClick} /> 
-                    </td>                   
-                    {quantity} 
-                      
-                                     
-                </tr>
+        return <TableRow>
+                    <TableCell scope="row"><p>{this.props.name}</p></TableCell>
+                    <TableCell scope="row"><p>£{this.props.price.toFixed(2)}</p> </TableCell>                               
+                    <TableCell scope="row">
+                        <Checkbox checked={this.props.selected} onClick={this.onClick} /> 
+                    </TableCell>                   
+                    {quantity}                                                         
+                </TableRow>
     }
 }
 
