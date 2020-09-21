@@ -10,9 +10,7 @@ export default function calculateHotOffer(items: menuItem[]){
         let m = mains.pop() 
         let d = drinks.pop()
         if (m) total += m.price
-        if (d) total += d.price 
-        
-
+        if (d) total += d.price         
     }
     return {
         total: total * 0.9,

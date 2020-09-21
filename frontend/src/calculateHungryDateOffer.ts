@@ -19,5 +19,4 @@ export default function calculateHungryDateOffer(items: menuItem[]){
         total: total,
         remainingItems: mains.concat(drinks).concat(desserts)
     }
-
 }

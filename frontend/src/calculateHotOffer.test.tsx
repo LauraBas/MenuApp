@@ -6,9 +6,7 @@ import { menuItem } from "./components/Menu";
 describe("offer calculator", function() {
     it("applies no discount and returns items if empty", () => {
         const input :menuItem[] = []
-
         const result = calculateHotOffer(input)
-
         const expectedTotal = 0
         const expectedRemainingItems :menuItem[] = []
         expect(result.total).to.eql(expectedTotal)

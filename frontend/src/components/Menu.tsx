@@ -138,12 +138,12 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         const firstOfferApplied = calculateHungryDateOffer(enumeratedItems)    
         const secondOfferApplied = calculateHotOffer(firstOfferApplied.remainingItems)
         let total =  firstOfferApplied.total + secondOfferApplied.total 
+
         for (let i = 0; i < secondOfferApplied.remainingItems.length; i++){
                 total += secondOfferApplied.remainingItems[i].price;             
         }       
         return total;
     }
-
   
       
     render() {
