@@ -4,8 +4,6 @@ import calculateHotOffer from '../calculateHotOffer';
 import calculateHungryDateOffer from '../calculateHungryDateOffer';
 import {Button,  ListItem, Dialog, DialogTitle, CircularProgress} from '@material-ui/core';
 import Offers from './Offers';
-import CheckIcon from '@material-ui/icons/Check';
-
 
 
 export interface menuItem {
@@ -62,10 +60,22 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         })    
         .then(res => res.text())
         .then(() => {
+            const newItems = this.state.items.map(item => {
+                return {
+                    name: item.name,
+                    type: item.type,
+                    price: item.price,
+                    selected: false,
+                    quantity: 1,
+                    id: item.id
+                }
+            })           
             this.setState({
                 orderPending: false,
-                orderDelivered: true
+                orderDelivered: true, 
+                items: newItems
             })
+            localStorage.setItem('items', JSON.stringify(newItems)) 
         })           
     }
 
@@ -81,7 +91,6 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                     selected: !item.selected,
                     quantity: 1,
                     id: item.id
-
                  }
             }
         })
@@ -143,9 +152,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         return <div>                   
                     <h1>Menu</h1> 
                     <div className="menu"> 
-
-                        <div className="container"> 
-                                                                                                      
+                        <div className="container">                                                                                     
                             <Offers />
                             <MenuSection title={"Mains"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "main")} />
                             <MenuSection title={"Drinks"} changeQuantity={this.changeQuantity} selectedItem={this.selectedItem} items={this.state.items.filter(i => i.type == "drink")}/>                       
@@ -161,7 +168,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                         ? <Button variant="contained"color="secondary"onClick={this.order} type="submit" disabled={noItemsChecked}>Place your order!</Button>
                         : <CircularProgress color="secondary"/>
                     }    
-                    <Dialog
+                    <Dialog                        
                         open={this.state.orderDelivered}
                         onClose={() => {this.setState({orderDelivered: false})}}
                         aria-labelledby="alert-dialog-title"

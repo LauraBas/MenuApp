@@ -1,9 +1,7 @@
-import Items from "./components/Items"
-
 import {menuItem} from "./components/Menu"
 
 export default function calculateHungryDateOffer(items: menuItem[]){
-    
+
     let mains = items.filter(item => item.type == 'main')
     let drinks = items.filter(item => item.type == 'drink')
     let desserts = items.filter(item => item.type == 'dessert')
