@@ -1,4 +1,5 @@
 import express from "express";
+import * as menuData from '../menu.json'
 
 interface Item {
   id :string
@@ -24,31 +25,45 @@ export function run () {
     database : 'menu'
   });
 
+  // app.get("/", function(_, res) {
+  //     connection.query("SELECT * FROM menu", (err :Error, results :any, fields :any) => {
+  //       if (err) throw err;
+  //       res.type('text/plain').send(results);
+  //   })
+  // });
+
   app.get("/", function(_, res) {
-      connection.query("SELECT * FROM menu", (err :Error, results :any, fields :any) => {
-        if (err) throw err;
-        res.type('text/plain').send(results);
-    })
+    const mains = menuData.food.map(item => ({name: item.name, price: item.price/100, type: "main"}))
+    const drinks = menuData.drink.map(item => ({name: item.name, price: item.price/100, type: "drink"}))
+    const desserts = menuData.dessert.map(item => ({name: item.name, price: item.price/100, type: "dessert"}))
+  
+    res.type('text/plain').send(mains.concat(drinks).concat(desserts));
   });
 
+  // app.post("/", function(req, res){
+  //   connection.query("INSERT INTO purchase (pending) VALUES (TRUE)", (err :Error, results :any, fields :any) => {
+  //     if (err) console.log(err);
+  //     const purchaseID = results.insertId
+  //     const values  = req.body.map((item :Item) => { return [item.id, purchaseID]})      
+
+  //     connection.query("INSERT INTO menuPurchaseLink (menuID, purchaseID) VALUES ?", [values] , (err :Error, results :any, fields :any) => {
+  //       if (err) throw err     
+
+  //       setTimeout(function(){ 
+  //         connection.query("UPDATE purchase SET pending = FALSE, delivered = TRUE WHERE id = " + purchaseID, (err :Error, results :any, fields :any) => {
+  //           if (err) console.log(err);
+
+  //           res.send()
+  //         });
+  //       }, 5000)         
+  //     })      
+  //   })
+  // });
+
   app.post("/", function(req, res){
-    connection.query("INSERT INTO purchase (pending) VALUES (TRUE)", (err :Error, results :any, fields :any) => {
-      if (err) console.log(err);
-      const purchaseID = results.insertId
-      const values  = req.body.map((item :Item) => { return [item.id, purchaseID]})      
-
-      connection.query("INSERT INTO menuPurchaseLink (menuID, purchaseID) VALUES ?", [values] , (err :Error, results :any, fields :any) => {
-        if (err) throw err     
-
-        setTimeout(function(){ 
-          connection.query("UPDATE purchase SET pending = FALSE, delivered = TRUE WHERE id = " + purchaseID, (err :Error, results :any, fields :any) => {
-            if (err) console.log(err);
-
-            res.send()
-          });
-        }, 5000)         
-      })      
-    })
+    setTimeout(function() {
+      res.sendStatus(200)
+    }, 5000)
   });
   
   return app.listen(port, function () {
