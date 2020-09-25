@@ -1,5 +1,7 @@
 import express from "express";
-import * as menuData from '../menu.json'
+import * as repository from "./localRepository" 
+
+
 
 interface Item {
   id :string
@@ -8,7 +10,7 @@ interface Item {
 const port = process.env.NODE_PORT || 4848;
 
 export function run () {
-  const app = express();   
+  const app = express();  
 
   app.use(express.json()) 
 
@@ -26,19 +28,17 @@ export function run () {
   });
 
   // app.get("/", function(_, res) {
-  //     connection.query("SELECT * FROM menu", (err :Error, results :any, fields :any) => {
-  //       if (err) throw err;
-  //       res.type('text/plain').send(results);
-  //   })
+  //    connection.query("SELECT * FROM menu", (err :Error, results :any, fields :any) => {
+  //    if (err) throw err;
+  //    res.type('text/plain').send(results);
+  //    })
   // });
 
   app.get("/", function(_, res) {
-    const mains = menuData.food.map(item => ({name: item.name, price: item.price/100, type: "main"}))
-    const drinks = menuData.drink.map(item => ({name: item.name, price: item.price/100, type: "drink"}))
-    const desserts = menuData.dessert.map(item => ({name: item.name, price: item.price/100, type: "dessert"}))
+     const menu = repository.getMenu()      
+      res.type('text/plain').send(menu);           
+    });
   
-    res.type('text/plain').send(mains.concat(drinks).concat(desserts));
-  });
 
   // app.post("/", function(req, res){
   //   connection.query("INSERT INTO purchase (pending) VALUES (TRUE)", (err :Error, results :any, fields :any) => {
@@ -60,10 +60,10 @@ export function run () {
   //   })
   // });
 
-  app.post("/", function(req, res){
+  app.post("/", function(req, res){  
     setTimeout(function() {
       res.sendStatus(200)
-    }, 5000)
+    }, 5000)    
   });
   
   return app.listen(port, function () {
@@ -74,3 +74,4 @@ export function run () {
 if(process.env.NODE_ENV !== 'testing') {
   run();
 }
+
