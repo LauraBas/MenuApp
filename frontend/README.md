@@ -18,6 +18,10 @@ The frontend uses React and Typescript.
 Material UI was used for general stylings.
 The tests use Chai and Mocha.
 
+## Comments
+I couldn't connect mysql with docker so I decided to retrieve the data on local instead of using the data base. Although I commented the code that I wrote before, so you can read it. 
+
+
 ## Questions
 
 * What would you improve with your code?

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { MenuSection } from './MenuSection';
-import calculateHotOffer from '../calculateHotOffer';
-import calculateHungryDateOffer from '../calculateHungryDateOffer';
+
+import calculateBestDiscount from '../calculateBestDiscount';
 import {Button,  ListItem, Dialog, DialogTitle, CircularProgress} from '@material-ui/core';
 import Offers from './Offers';
 
@@ -46,6 +46,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         }
     }
     
+    // when order change the order pending state to true
     order(e :React.MouseEvent){  
         this.setState({
             orderPending: true           
@@ -56,8 +57,10 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
             headers: {
                 'Content-Type': 'application/json'
             },
+            //take the selected items 
             body: JSON.stringify(this.state.items.filter(item => item.selected))
         })    
+        // After the message of order ready, clear the items selected
         .then(res => res.text())
         .then(() => {
             const newItems = this.state.items.map(item => {
@@ -106,7 +109,7 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         const newItems = this.state.items.map(item =>{
             if(item.name !== name){
                 return item
-            } else{
+            } else {
                 return {
                 name: item.name,
                 type: item.type,
@@ -124,30 +127,39 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
         localStorage.setItem('items', JSON.stringify(newItems))      
     }
 
+    // make a list with one item per order
+    
     enumerateItems(item: menuItem){
         const arr = []
         for(let i = 0; i < item.quantity; i++) {
             arr.push(item)
         }
-        return arr
+       return arr
     }
 
-    calculateTotal() {        
-        const checked = this.state.items.filter(i=> i.selected)
-        const enumeratedItems = checked.flatMap(this.enumerateItems)
-        const firstOfferApplied = calculateHungryDateOffer(enumeratedItems)    
-        const secondOfferApplied = calculateHotOffer(firstOfferApplied.remainingItems)
-        let total =  firstOfferApplied.total + secondOfferApplied.total 
+    //Calculate the total price without any offer applied
 
-        for (let i = 0; i < secondOfferApplied.remainingItems.length; i++){
-                total += secondOfferApplied.remainingItems[i].price;             
-        }       
+    totalPrice(items: menuItem[]) {
+        let total = 0
+            for (let i = 0; i < items.length; i++){
+                total += items[i].price;             
+            }       
         return total;
     }
-  
+
+    // calculate the total price applying the better discount
+    calculateTotal() {        
+        const checked = this.state.items.filter(i=> i.selected)
+        const enumeratedItems = checked.flatMap(this.enumerateItems) 
+          
+        return this.totalPrice(enumeratedItems) - calculateBestDiscount(enumeratedItems)          
+    }   
       
     render() {
         const noItemsChecked = this.state.items.filter(item => item.selected).length == 0 
+        const discount = calculateBestDiscount(this.state.items
+            .filter(i=> i.selected)
+            .flatMap(this.enumerateItems))
         
         return <div>                   
                     <h1>Menu</h1> 
@@ -162,7 +174,10 @@ export class Menu extends Component<{}, { items: menuItem[], orderPending: boole
                         {this.state.items.filter(item => item.selected).map(i => 
                             <ListItem className="orderItems">{i.name}  {i.quantity} </ListItem>)}                
                         
-                        <p>Total Price: £{this.calculateTotal().toFixed(2)}</p>  
+                        <p>Total Price: £{this.calculateTotal().toFixed(2)}</p> 
+                        {discount > 0 && 
+                            <p>Total Discount Applied: £{discount.toFixed(2)}</p> 
+                        } 
                     </div>  
                     {!this.state.orderPending 
                         ? <Button variant="contained"color="secondary"onClick={this.order} type="submit" disabled={noItemsChecked}>Place your order!</Button>
